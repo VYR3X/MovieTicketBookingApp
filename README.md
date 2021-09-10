@@ -1,4 +1,4 @@
 # MovieTicketBookingApp
 Simple IOS application to booking movie ticket on SwiftUI
 
-<img src="/images/MovieDetailView.gif" width="25%">
+<img src="/images/BookingTicket.gif" width="25%">
