@@ -15,6 +15,7 @@
 		4169287B26E96217003BD3AB /* MovieAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4169287A26E96217003BD3AB /* MovieAppUITests.swift */; };
 		4169288A26E96270003BD3AB /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4169288926E96270003BD3AB /* Home.swift */; };
 		4198652526EA96EE0049A5A1 /* MovieModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4198652426EA96EE0049A5A1 /* MovieModel.swift */; };
+		4198652726EBCB850049A5A1 /* BookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4198652626EBCB850049A5A1 /* BookingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		4169287C26E96217003BD3AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4169288926E96270003BD3AB /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		4198652426EA96EE0049A5A1 /* MovieModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieModel.swift; sourceTree = "<group>"; };
+		4198652626EBCB850049A5A1 /* BookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				4169288926E96270003BD3AB /* Home.swift */,
+				4198652626EBCB850049A5A1 /* BookingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				4169286026E96215003BD3AB /* ContentView.swift in Sources */,
 				4169288A26E96270003BD3AB /* Home.swift in Sources */,
 				4169285E26E96215003BD3AB /* MovieAppApp.swift in Sources */,
+				4198652726EBCB850049A5A1 /* BookingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

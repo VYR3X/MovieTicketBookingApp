@@ -123,8 +123,8 @@ struct FooterView: View {
     var body: some View {
         
         NavigationLink(
-            
-            destination: Text("Destination"),
+            // переход на BookingView 
+            destination: BookingView(),
             label: {
                 Text("Buy Ticket")
                     .fontWeight(.bold)
