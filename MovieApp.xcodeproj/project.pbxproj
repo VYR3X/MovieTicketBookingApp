@@ -78,6 +78,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4156B46726EE6B5F0061A90A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4169286126E96217003BD3AB /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		4169285126E96215003BD3AB = {
 			isa = PBXGroup;
 			children = (
@@ -101,13 +109,13 @@
 		4169285C26E96215003BD3AB /* MovieApp */ = {
 			isa = PBXGroup;
 			children = (
-				4198652326EA96A00049A5A1 /* Model */,
-				4169288826E96262003BD3AB /* View */,
+				4156B46726EE6B5F0061A90A /* Resources */,
 				4169285D26E96215003BD3AB /* MovieAppApp.swift */,
 				4169285F26E96215003BD3AB /* ContentView.swift */,
-				4169286126E96217003BD3AB /* Assets.xcassets */,
-				4169286626E96217003BD3AB /* Info.plist */,
+				4198652326EA96A00049A5A1 /* Model */,
+				4169288826E96262003BD3AB /* View */,
 				4169286326E96217003BD3AB /* Preview Content */,
+				4169286626E96217003BD3AB /* Info.plist */,
 			);
 			path = MovieApp;
 			sourceTree = "<group>";
