@@ -11,21 +11,20 @@ import SwiftUI
 // Удалить KingFisher
 
 struct SearchCardView : View {
-    var data: MovieModel
-    var dashboardVM: DashboardViewModel
-    var body: some View{
+    var data: Movie
+    var body: some View {
         
         ZStack(alignment : .topLeading) {
             
             HStack(alignment : .bottom, spacing : 0) {
                 VStack{
                     VStack(alignment : .leading, spacing : 3) {
-                        Text(data.title!)
+                        Text(data.title)
                             .font(.system(size: 20, weight: .semibold, design: .default))
                         Text(data.releaseDate!)
-                        Text(dashboardVM.getGenreString(id: data.genre_ids!))
-                        
-                        RatingView(arcAngle: dashboardVM.getTheAcrForProgressBar(data : data), rating: "\(data.voteAverage ?? "0.0")",size: 32)
+//                        Text(dashboardVM.getGenreString(id: data.genre_ids!))
+                        // 7 из 10 
+                        RatingView(arcAngle: 10, rating: "\(7)",size: 32)
                     }.padding(.leading, 110)
                     .padding(.top, 8)
                     
@@ -40,7 +39,7 @@ struct SearchCardView : View {
             .padding(.horizontal,8)
             
             //
-//            KFImage(URL(string: Formatter.urlForImage + data.posterPath!))
+//            KFImage(URL(string: Utils.urlForImage + data.posterPath!))
 //                .resizable()
 //                .frame(width: 100, height: 150, alignment: .top)
 //                .aspectRatio(contentMode: .fit)
@@ -56,7 +55,7 @@ struct SearchCardView : View {
                 .cornerRadius(15)
             
             NavigationLink(
-                destination: DetailsView(data: data, dashboardVM: dashboardVM)
+                destination: SampleDetailView()
                     .navigationBarHidden(true)
                     .navigationBarBackButtonHidden(true),
                 label: {

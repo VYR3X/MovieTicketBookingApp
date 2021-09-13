@@ -20,7 +20,7 @@ final class CoreDataService {
    
     let apiCalledStatus = UserDefaults.standard
     
-    func saveMovie(endPoing: MovieEndpoint, models: [MovieModel]) {
+    func saveMovie(endPoing: MovieEndpoint, models: [Movie]) {
         switch endPoing {
         case .nowPlaying:
             print("Save now playing movie data")

@@ -1,5 +1,5 @@
 //
-//  Home.swift
+//  SampleDetailView.swift
 //  MovieApp
 //
 //  Created by v.zhokhov on 09.09.2021.
@@ -7,33 +7,33 @@
 
 import SwiftUI
 
-struct Home: View {
+struct SampleDetailView: View {
     var body: some View {
         
         ScrollView(.vertical, showsIndicators: false, content: {
             LazyVStack(spacing: 15, pinnedViews: [.sectionFooters], content: {
                
                 Section(footer: FooterView()) {
-                    HStack {
-                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                            Image(systemName: "chevron.left")
-                                .font(.title2)
-                        })
-                        
-                        Spacer()
-                        
-                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                            Image(systemName: "bookmark")
-                                .font(.title2)
-                        })
-                    }
-                    .overlay(
-                        Text("Detail Movie")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                    )
-                    .padding()
-                    .foregroundColor(.white)
+//                    HStack {
+//                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+//                            Image(systemName: "chevron.left")
+//                                .font(.title2)
+//                        })
+//
+//                        Spacer()
+//                        
+//                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+//                            Image(systemName: "bookmark")
+//                                .font(.title2)
+//                        })
+//                    }
+//                    .overlay(
+//                        Text("Detail Movie")
+//                            .font(.title2)
+//                            .fontWeight(.semibold)
+//                    )
+//                    .padding()
+//                    .foregroundColor(.white)
                     
                     
                     ZStack {
@@ -114,16 +114,14 @@ struct Home: View {
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
-        Home()
+        SampleDetailView()
     }
 }
 
 struct FooterView: View {
     
     var body: some View {
-        
         NavigationLink(
-            // переход на BookingView 
             destination: BookingView(),
             label: {
                 Text("Buy Ticket")

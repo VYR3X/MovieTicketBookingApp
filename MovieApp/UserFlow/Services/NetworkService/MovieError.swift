@@ -7,12 +7,18 @@
 
 import Foundation
 
+/// Сетевые ошибки
 enum MovieError: Error, CustomNSError {
     
+    /// Ошибка при выполнении dataTask
     case apiError
+    /// Неверный  endpoint
     case invalidEndpoint
+    /// Некоректный ответ от сервера ( 400 ошибка ) 
     case invalidResponse
+    /// Данные не пришли
     case noData
+    /// Проблема сериализации
     case serializationError
     
     var localizedDescription: String {

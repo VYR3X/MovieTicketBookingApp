@@ -1,5 +1,5 @@
 //
-//  Formatter.swift
+//  Utils.swift
 //  MovieApp
 //
 //  Created by v.zhokhov on 12.09.2021.
@@ -7,12 +7,13 @@
 
 import Foundation
 
-final class Formatter {
+final class Utils {
     
-    static let urlForImage = "https://image.tmdb.org/t/p/w500"
+//    static let urlForImage = "https://image.tmdb.org/t/p/w500"
     
     static let jsonDecoder: JSONDecoder = {
         let jsonDecoder = JSONDecoder()
+        // если я правильно понял это чтобы в модели не создавать coding key 
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
         return jsonDecoder

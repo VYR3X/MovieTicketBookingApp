@@ -2,95 +2,148 @@
 //  NetworkService.swift
 //  MovieApp
 //
-//  Created by v.zhokhov on 12.09.2021.
+//  Created by v.zhokhov on 13.09.2021.
 //
 
 import Foundation
-import CoreData
 
-// Протокол для работы с сетевым сервисов
-protocol MovieService {
-    func fetchMovies(endPoint: MovieEndpoint,
-                     page: Int,
-                     completionHangler: @escaping (Result<[MovieModel], MovieError>) -> ())
+/// Протокол для взаимодействия с сетевым сервисом
+protocol NetworkServiceProtocol {
     
+    /// Получение фильмов
+    /// - Parameters:
+    ///   - endpoint: endpoint запроса
+    ///   - completion: блок завершения
+    func fetchMovies(from endpoint: MovieEndpoint, completion: @escaping (Result<MovieResponse, MovieError>) -> ())
+    
+    /// Получение фильма
+    /// - Parameters:
+    ///   - id: id фильма
+    ///   - completion: блок завершения
+    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ())
+    
+    /// Получение фильма после поиска
+    /// - Parameters:
+    ///   - query: параметры запроса
+    ///   - completion: блок завершения
+    func searchMovie(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ())
 }
 
-// Класс для работы с сетью
-final class NetworkService: MovieService {
+
+/// Сервис для работы с сетевыми запросами
+final class NetworkService {
     
-    private let apiKey = "" // API_KEY
+    // Синглтон сервиса
+    static let shared = NetworkService()
+    private init() {}
+    
     private let baseAPIURL = "https://api.themoviedb.org/3"
-    private let urlSession = URLSession.shared
     
-    func fetchMovies(endPoint: MovieEndpoint,
-                     page: Int,
-                     completionHangler: @escaping (Result<[MovieModel], MovieError>) -> ()) {
+    private let urlSession = URLSession.shared
+    private let jsonDecoder = Utils.jsonDecoder
+    
+    private func loadURLAndDecode<D: Decodable>(url: URL,
+                                                params: [String: String]? = nil,
+                                                completion: @escaping (Result<D, MovieError>) -> ()) {
         
-        guard let url = URL(string: "\(baseAPIURL)/movie/\(endPoint.rawValue)?api_key=\(apiKey)&page=\(page)") else {
-            completionHangler(.failure(.invalidEndpoint))
+        /// 1. Собираем URL покомпонентно
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            completion(.failure(.invalidEndpoint))
             return
         }
         
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+        /// 2. Параметры запроса ( APIKEY ) + опционально доп. параметры
+        var queryItems = [URLQueryItem(name: "api_key", value: configData("MovieDB API Key"))]
+        
+        if let params = params {
+            queryItems.append(contentsOf: params.map { URLQueryItem(name: $0.key, value: $0.value) })
+        }
+        urlComponents.queryItems = queryItems
+        
+        /// 3. Получаем готовый урл из наших компонентов
+        
+        guard let finalURL = urlComponents.url else {
+            completion(.failure(.invalidEndpoint))
+            return
+        }
+        
+        urlSession.dataTask(with: finalURL) { [weak self] (data, response, error) in
+            guard let self = self else { return }
             
-            guard let data = data else{
-                print("No inter connection found")
-                completionHangler(.failure(.noData))
+            if error != nil {
+                self.asyncExecution(with: .failure(.apiError), completion: completion)
                 return
             }
             
-//            let parent = PersistenceContainer.shared.container.viewContext
-//            let childContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-//            childContext.parent = parent
+            /// Статус ответа от сервера
+            /// Если statusCode находится в пределах от 200 до 300 то все отлично )
+            guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+                self.asyncExecution(with: .failure(.invalidResponse), completion: completion)
+                return
+            }
+            
+            /// Данные не пришли
+            guard let data = data else {
+                self.asyncExecution(with: .failure(.noData), completion: completion)
+                return
+            }
             
             do {
-                // JSONDecoder с возможностью сохранения данных в Core Data
-//                let decoder = JSONDecoder(context: childContext)
-                // Обычный декодер
-                let simpleJSONDecoder = JSONDecoder()
-                
-                switch endPoint{
-                case .nowPlaying:
-                    print("Network manager success fetch moview model and Save in core data")
-//                    let model  =  try decoder.decode(NowPlayingModel.self, from: data)
-                    let model = try simpleJSONDecoder.decode([MovieModel].self, from: data)
-//                    completionHangler(.success(model.movie!))
-                    completionHangler(.success(model))
-                case .popular:
-                    print("Network manager success fetch moview model and Save in core data")
-//                    let model  =  try decoder.decode(PopularMovieModel.self, from: data)
-                    let model  =  try simpleJSONDecoder.decode([MovieModel].self, from: data)
-//                    completionHangler(.success(model.popularMovie!))
-                    completionHangler(.success(model))
-                case .topRated:
-                    print("Network manager success fetch moview model and Save in core data")
-//                    let model  =  try decoder.decode(TopRatedMovieModel.self, from: data)
-                    let model  =  try simpleJSONDecoder.decode([MovieModel].self, from: data)
-//                    completionHangler(.success(model.topRatedMovie!))
-                    completionHangler(.success(model))
-                case .upcoming:
-                    print("Network manager success fetch moview model and Save in core data")
-//                    let model  =  try decoder.decode(Upcoming.self, from: data)
-                    let model  =  try simpleJSONDecoder.decode([MovieModel].self, from: data)
-//                    completionHangler(.success(model.upcomingMovie!))
-                    completionHangler(.success(model))
-                }
+                let decodedResponse = try self.jsonDecoder.decode(D.self, from: data)
+                self.asyncExecution(with: .success(decodedResponse), completion: completion)
             } catch {
-                print("Error while decoding \(error)")
-                completionHangler(.failure(.serializationError))
+                self.asyncExecution(with: .failure(.serializationError), completion: completion)
             }
-        }
-        task.resume()
+        }.resume()
     }
+    
+    // Асинхронная выгрузка данных
+    private func asyncExecution<D: Decodable>(with result: Result<D, MovieError>,
+                                                                    completion: @escaping (Result<D, MovieError>) -> ()) {
+        DispatchQueue.main.async {
+            completion(result)
+        }
+    }
+    
+    // Получение данных из конфигурационного файла
+    private func configData(_ key: String) -> String? {
+        return (Bundle.main.infoDictionary?[key] as? String)
+     }
 }
 
 
-// MARK: - JSONDecoder extension
+// MARK: - NetworkServiceProtocol
 
-extension JSONDecoder {
-    convenience init(context: NSManagedObjectContext) {
-        self.init()
-        self.userInfo[.managedObjectContext] = context
+extension NetworkService: NetworkServiceProtocol {
+    
+    func fetchMovies(from endpoint: MovieEndpoint, completion: @escaping (Result<MovieResponse, MovieError>) -> ()) {
+        guard let url = URL(string: "\(baseAPIURL)/movie/\(endpoint.rawValue)") else {
+            completion(.failure(.invalidEndpoint))
+            return
+        }
+        self.loadURLAndDecode(url: url, completion: completion)
+    }
+    
+    func fetchMovie(id: Int, completion: @escaping (Result<Movie, MovieError>) -> ()) {
+        guard let url = URL(string: "\(baseAPIURL)/movie/\(id)") else {
+            completion(.failure(.invalidEndpoint))
+            return
+        }
+        self.loadURLAndDecode(url: url, params: [
+            "append_to_response": "videos,credits"
+        ], completion: completion)
+    }
+    
+    func searchMovie(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ()) {
+        guard let url = URL(string: "\(baseAPIURL)/search/movie") else {
+            completion(.failure(.invalidEndpoint))
+            return
+        }
+        self.loadURLAndDecode(url: url, params: [
+            "language": "en-US",
+            "include_adult": "false",
+            "region": "US",
+            "query": query
+        ], completion: completion)
     }
 }
