@@ -11,22 +11,25 @@ import SwiftUI
 // Экран поиска кинофильма
 struct SearchView : View {
     
-    @Environment(\.managedObjectContext) private var viewContext
-    @ObservedObject var dashboardVM : DashboardViewModel
+//    @Environment(\.managedObjectContext) private var viewContext
+    @ObservedObject var dashboardVM: DashboardViewModel
     @Environment(\.presentationMode) var presentationMode
     
-    @FetchRequest(entity: NowPlaying.entity(), sortDescriptors:[NSSortDescriptor(keyPath: \NowPlaying.timeStamp, ascending: true)])
+    @FetchRequest(entity: NowPlayingModel.entity(), sortDescriptors:[NSSortDescriptor(keyPath: \NowPlayingModel.timeStamp, ascending: true)])
     // NowPlaying - модель в core data
-    var nowPlayingMovies: FetchedResults<NowPlaying>
-    @FetchRequest(entity: Popular.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Popular.timeStamp, ascending: true)])
+    var nowPlayingMovies: FetchedResults<NowPlayingModel>
+    
+    @FetchRequest(entity: PopularMovieModel.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \PopularMovieModel.timeStamp, ascending: true)])
     // NowPlaying - модель в core data
-    var popularMovies: FetchedResults<Popular>
+    var popularMovies: FetchedResults<PopularMovieModel>
+    
     @FetchRequest(entity: Upcoming.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Upcoming.timeStamp, ascending: true)])
     // NowPlaying - модель в core data
     var upcomingMovie: FetchedResults<Upcoming>
-    @FetchRequest(entity: TopRated.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \TopRated.timeStamp, ascending: true)])
+    
+    @FetchRequest(entity: TopRatedMovieModel.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \TopRatedMovieModel.timeStamp, ascending: true)])
     // NowPlaying - модель в core data
-    var topratedMovie: FetchedResults<TopRated>
+    var topratedMovie: FetchedResults<TopRatedMovieModel>
     
     var body: some View {
         
@@ -38,7 +41,7 @@ struct SearchView : View {
                 LazyVStack(alignment : .leading) {
                     
                     ForEach(nowPlayingMovies, id : \.self) { item in
-                        ForEach(item.nowPlayingMovie!.filter({ (value) -> Bool in
+                        ForEach(item.movie!.filter({ (value) -> Bool in
                             
                             dashboardVM.filterDataFormLocal(value: value)
                             

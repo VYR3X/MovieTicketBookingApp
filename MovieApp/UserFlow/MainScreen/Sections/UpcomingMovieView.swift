@@ -15,7 +15,7 @@ struct UpcomingMovieView : View {
     
     var body: some View{
         VStack(alignment  : .leading, spacing : 0) {
-            Text("\(MovieListEndpoint.upcoming.description)")
+            Text("\(MovieEndpoint.upcoming.description)")
                 .font(.system(size: 18, weight: .bold, design: .default))
                 .padding(.leading, 20)
             
@@ -25,8 +25,8 @@ struct UpcomingMovieView : View {
                     if upcomingMovie.count > 0{
                         ForEach(upcomingMovie) { item in
                             ForEach(item.upcomingMovie!) { value in
-                                VStack{
-                                    SmallCardsWithImage(value: value, dashboardVM: dashboardVM)
+                                VStack {
+                                    SmallCardView(value: value, dashboardVM: dashboardVM)
                                 }.onAppear(perform: {
                                     
                                     let pageNumber = upcomingMovie.count + 1

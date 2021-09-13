@@ -10,8 +10,9 @@ import SwiftUI
 struct MainView: View {
     
     // DI
-    @Environment(\.managedObjectContext) private var viewContext
+//    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode
+    
     @ObservedObject var dashboardVM: DashboardViewModel
     
     var body: some View {
@@ -20,7 +21,7 @@ struct MainView: View {
             
             if dashboardVM.presentFilterView {
                 SearchView(dashboardVM: dashboardVM)
-                    .environment(\.managedObjectContext, viewContext)
+//                    .environment(\.managedObjectContext, viewContext)
                     .navigationBarHidden(true)
             } else {
                 VStack {

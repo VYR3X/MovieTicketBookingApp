@@ -1,5 +1,5 @@
 //
-//  SmallCardsWithImage.swift
+//  SmallCardView.swift
 //  MovieApp
 //
 //  Created by v.zhokhov on 12.09.2021.
@@ -8,7 +8,7 @@
 import SwiftUI
 //import Kingfisher
 
-struct SmallCardsWithImage : View {
+struct SmallCardView: View {
     
     var value: MovieModel
     @ObservedObject var dashboardVM: DashboardViewModel

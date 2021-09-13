@@ -13,7 +13,6 @@ struct PersistenceContainer {
     static let shared = PersistenceContainer()
 
     static var preview: PersistenceContainer = {
-        
         let result = PersistenceContainer(inMemory: true)
         let viewContext = result.container.viewContext
         

@@ -19,7 +19,7 @@ protocol MovieService {
 // Класс для работы с сетью
 final class NetworkService: MovieService {
     
-    private let apiKey = "API_KEY"
+    private let apiKey = "" // API_KEY
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let urlSession = URLSession.shared
     
@@ -32,7 +32,6 @@ final class NetworkService: MovieService {
             return
         }
         
-        
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             
             guard let data = data else{
@@ -41,9 +40,9 @@ final class NetworkService: MovieService {
                 return
             }
             
-            let parent = PersistenceContainer.shared.container.viewContext
-            let childContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            childContext.parent = parent
+//            let parent = PersistenceContainer.shared.container.viewContext
+//            let childContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+//            childContext.parent = parent
             
             do {
                 // JSONDecoder с возможностью сохранения данных в Core Data
@@ -54,21 +53,28 @@ final class NetworkService: MovieService {
                 switch endPoint{
                 case .nowPlaying:
                     print("Network manager success fetch moview model and Save in core data")
-//                    let decodeData  =  try decoder.decode(NowPlaying.self, from: data)
-//                    let model = try simpleJSONDecoder.decode(NowPlaying.self, from: data)
-//                    completionHangler(.success(decodeData.nowPlayingMovie!))
+//                    let model  =  try decoder.decode(NowPlayingModel.self, from: data)
+                    let model = try simpleJSONDecoder.decode([MovieModel].self, from: data)
+//                    completionHangler(.success(model.movie!))
+                    completionHangler(.success(model))
                 case .popular:
                     print("Network manager success fetch moview model and Save in core data")
-//                    let decodeData  =  try decoder.decode(Popular.self, from: data)
-//                    completionHangler(.success(decodeData.popularMovie!))
+//                    let model  =  try decoder.decode(PopularMovieModel.self, from: data)
+                    let model  =  try simpleJSONDecoder.decode([MovieModel].self, from: data)
+//                    completionHangler(.success(model.popularMovie!))
+                    completionHangler(.success(model))
                 case .topRated:
                     print("Network manager success fetch moview model and Save in core data")
-//                    let decodeData  =  try decoder.decode(TopRated.self, from: data)
-//                    completionHangler(.success(decodeData.topRatedMovie!))
+//                    let model  =  try decoder.decode(TopRatedMovieModel.self, from: data)
+                    let model  =  try simpleJSONDecoder.decode([MovieModel].self, from: data)
+//                    completionHangler(.success(model.topRatedMovie!))
+                    completionHangler(.success(model))
                 case .upcoming:
                     print("Network manager success fetch moview model and Save in core data")
-//                    let decodeData  =  try decoder.decode(Upcoming.self, from: data)
-//                    completionHangler(.success(decodeData.upcomingMovie!))
+//                    let model  =  try decoder.decode(Upcoming.self, from: data)
+                    let model  =  try simpleJSONDecoder.decode([MovieModel].self, from: data)
+//                    completionHangler(.success(model.upcomingMovie!))
+                    completionHangler(.success(model))
                 }
             } catch {
                 print("Error while decoding \(error)")
@@ -79,3 +85,12 @@ final class NetworkService: MovieService {
     }
 }
 
+
+// MARK: - JSONDecoder extension
+
+extension JSONDecoder {
+    convenience init(context: NSManagedObjectContext) {
+        self.init()
+        self.userInfo[.managedObjectContext] = context
+    }
+}

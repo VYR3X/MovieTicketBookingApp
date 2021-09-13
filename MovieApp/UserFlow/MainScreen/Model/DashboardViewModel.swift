@@ -25,6 +25,10 @@ class DashboardViewModel: ObservableObject {
     @Published var entredDataForSearch = ""
     @Published var keyboardType: KeyboardType = .numeric
     
+    //  Да меня заебал механизм сохранения это пиздец хуета
+    // по этому пока сохраним модель данных тут )
+    var resultModel: [MovieModel] = []
+    
     // Api Service
     private var networkService: NetworkService
     // View contex
@@ -104,7 +108,8 @@ class DashboardViewModel: ObservableObject {
         networkService.fetchMovies(endPoint: endPoint, page: page) { result in
             switch result {
             case .success(let models):
-                self.saveDataInMemory(movieList: models)
+                self.resultModel = models
+//                self.saveDataInMemory(movieList: models)
 //                Database.shared.saveMovie(endPoing: endPoint, listOfMovie: data)
             case .failure(let error):
                 print("error on fail : \(error)")

@@ -10,10 +10,10 @@ import SwiftUI
 struct PopularMovieView : View {
     
     @ObservedObject var dashboardVM: DashboardViewModel
-    @FetchRequest(entity: Popular.entity(),
-                  sortDescriptors: [NSSortDescriptor(keyPath: \Popular.timeStamp, ascending: true)])
+    @FetchRequest(entity: PopularMovieModel.entity(),
+                  sortDescriptors: [NSSortDescriptor(keyPath: \PopularMovieModel.timeStamp, ascending: true)])
     
-    var popularMovies: FetchedResults<Popular>
+    var popularMovies: FetchedResults<PopularMovieModel>
     
     var body: some View{
         VStack(alignment  : .leading, spacing : 0) {
@@ -26,7 +26,7 @@ struct PopularMovieView : View {
                     if popularMovies.count > 0{
                         ForEach(popularMovies) { item in
                             ForEach(item.popularMovie!) { value in
-                                SmallCardsWithImage(value: value, dashboardVM: dashboardVM)
+                                SmallCardView(value: value, dashboardVM: dashboardVM)
                                     .onAppear(perform: {
                                         
                                         let pageNumber = popularMovies.count + 1
@@ -37,15 +37,10 @@ struct PopularMovieView : View {
                                     })
                             }
                             .frame(width: 130, height: nil, alignment: .leading)
-                            
-                            
-                            
                         }
-                        
                     }
                 }
                 .padding(.leading, 20)
-                
             }
         }
     }

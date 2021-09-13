@@ -11,7 +11,7 @@ import SwiftUI
 struct LargeCardView: View {
     
     var value: MovieModel
-    var nowPlayingMovies: FetchedResults<NowPlaying>
+    var nowPlayingMovies: FetchedResults<NowPlayingModel>
     @ObservedObject var dashboardVM: DashboardViewModel
     
     var body : some View {
@@ -37,7 +37,7 @@ struct LargeCardView: View {
                 .onAppear(perform: {
                     let pageNumber = nowPlayingMovies.count + 1
                     //Call api before last five data shown
-                    if nowPlayingMovies.last!.nowPlayingMovie![15] == value{
+                    if nowPlayingMovies.last!.movie![15] == value{
                         dashboardVM.loadMoreData(endPoint: .nowPlaying, pageNumber: pageNumber)
                     }
                 })
