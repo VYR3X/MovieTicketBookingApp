@@ -29,7 +29,6 @@ protocol NetworkServiceProtocol {
     func searchMovie(query: String, completion: @escaping (Result<MovieResponse, MovieError>) -> ())
 }
 
-
 /// Сервис для работы с сетевыми запросами
 final class NetworkService {
     
@@ -37,7 +36,7 @@ final class NetworkService {
     static let shared = NetworkService()
     private init() {}
     
-    private let baseAPIURL = "https://api.themoviedb.org/3"
+    private lazy var baseAPIURL = String(configData("Base API URL") ?? "")
     
     private let urlSession = URLSession.shared
     private let jsonDecoder = Utils.jsonDecoder
@@ -107,7 +106,8 @@ final class NetworkService {
     
     // Получение данных из конфигурационного файла
     private func configData(_ key: String) -> String? {
-        return (Bundle.main.infoDictionary?[key] as? String)
+        guard let resultValue = (Bundle.main.infoDictionary?[key] as? String) else { return nil }
+        return resultValue.replacingOccurrences(of: "#", with: "//")
      }
 }
 

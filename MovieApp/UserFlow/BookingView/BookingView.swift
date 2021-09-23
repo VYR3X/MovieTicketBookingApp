@@ -15,20 +15,23 @@ struct BookingView: View {
     @State var date: Date = Date()
     @State var selectedTime = "11:30"
     
+    // Через эту переменну делаем dismiss
+    // https://stackoverflow.com/questions/57036645/swiftui-navigationlink-pop
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         
         ScrollView(.vertical, showsIndicators: false, content: {
-            
+            // Навигационный бар горизонтальный <
             HStack {
-                
-                Button(action: {}, label: {
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }, label: {
                     Image(systemName: "chevron.left")
                         .font(.title2)
                         .foregroundColor(.white)
                 })
-                
                 Spacer()
-                
             }
             .overlay(
                 Text("Selected sits")
@@ -60,7 +63,7 @@ struct BookingView: View {
             // Grid view of seats
             
             // total seats == 60
-            // по дизайну там по углам 4 пыстых места
+            // По дизайну там по углам 4 пустых места
              
             let totalSeats = 60 + 4
             
@@ -71,9 +74,6 @@ struct BookingView: View {
                 let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 4)
                 
                 LazyVGrid(columns: columns, spacing: 13, content: {
-                    
-                    
-                    
                     ForEach(leftSide, id: \.self) { index in
                         // getting correct seats
                         let seat = index >= 29 ? index - 1 : index
@@ -124,11 +124,11 @@ struct BookingView: View {
                             .disabled(bookedSeats.contains(seat))
                     }
                 })
-                
             }
             .padding()
             .padding(.top, 55)
             
+            // Горизонтальный стек
             HStack {
                 // Booked Seats
                 RoundedRectangle(cornerRadius: 4)
@@ -165,12 +165,10 @@ struct BookingView: View {
             
             // Date horizontal stack
             HStack {
-                
                 Text("Date:")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
-                
                 Spacer()
                 DatePicker("", selection: $date, displayedComponents: .date)
                     .labelsHidden()
@@ -179,6 +177,7 @@ struct BookingView: View {
             .padding(.top)
             
             // Timing in scroll view
+            // Collection view == ScrollView + Hstack
             ScrollView(.horizontal, showsIndicators: false, content: {
                 HStack(spacing: 20) {
                     // перменна time это массив из папки Model
